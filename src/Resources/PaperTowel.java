@@ -39,4 +39,9 @@ public class PaperTowel {
             throw new PaperTowelRunOut();
         }
     }
+    
+    @Override
+    public String toString() {
+        return "Paper container - " + fill_status + " paper towels left";
+    }
 }
