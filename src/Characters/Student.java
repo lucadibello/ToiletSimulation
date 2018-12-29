@@ -26,19 +26,28 @@ public final class Student extends Thread{
     private int schoolYear;
     
     /**
+     * Describes the student name.
+     */
+    private String name;
+    /**
      * Describes how many times the students go to the bathroom during the day.
      */
     private int timesPerDay;
     
     /**
-     * Describes if the student is in the bathroom
+     * Describes if the student is in the bathroom.
      */
     private boolean isInBathroom;
     
     /**
-     * Describes when the student have to go to the bathroom
+     * Describes when the student have to go to the bathroom.
      */
     private Time[] whenBathroom;
+    
+    /**
+     * A flag for suspend the thread.
+     */
+    private boolean suspended = true;
     // </editor-fold>
     
     /**
@@ -47,51 +56,69 @@ public final class Student extends Thread{
      * @param schoolYear Studend school year.
      * @param timesPerDay How many times during the day the student have to go to the bathroom. 
      */
-    public Student(SchoolDepartment department, int schoolYear, int timesPerDay) {
+    public Student(String name,SchoolDepartment department, int schoolYear, int timesPerDay) {
+        this.name = name;
         setDepartment(department);
         setSchoolYear(schoolYear);
         setTimesPerDay(timesPerDay);
         whenBathroom = generateBathroomTime(timesPerDay);
+        
+        this.start();
     }
     
     public void goToBathroom(Soap soap, PaperTowel paper){
-        if(!isInBathroom){
-            //Set flag
-            isInBathroom = true;
-            this.start();
-        }
+        //Set flag
+        isInBathroom = true;
+        System.out.println("---------------------------------------------");
+        System.out.println(this + "is going to bathroom");
+
+        resumeThread();
+        
+        //this.run();
     }
     
     public void exitBathroom(){
         if(isInBathroom){
             //Reset flag
-            isInBathroom = false;    
+            isInBathroom = false; 
         }
     }
     
     @Override
     public void run(){
-        System.out.println("Student is in bathroom");
-        //Random sleep time -> Time until the student finish with the bathroom
-        //Massimo 30 minuti - Minimo 30 secondi
-        
-        long millMax = 60 * 10 * 1000;
-        long millMin = 30 * 1000;
-        long millSleepTime = ThreadLocalRandom.current().nextLong(millMin, millMax);
+        while(true){
 
-        Time currentCalendarTime = TimeManager.getTime();
-        Time postCalendarTime = new Time(currentCalendarTime.getTime() + millSleepTime);
-        /*
-        try{
-            currentThread().sleep(millSleepTime);
-        }
-        catch(InterruptedException ex){
-        }
+            try{
+                synchronized(this){
+                    while(suspended){
+                        wait();
+                    }
+                }
 
-        System.out.println(this + " exited bathroom");
-        */
-        System.out.println(currentCalendarTime + " - until: " + postCalendarTime);
-        exitBathroom();
+                if(isInBathroom){
+                    Time currentCalendarTime = TimeManager.getTimeObj();
+                    System.out.println(this + " entered at " + currentCalendarTime);
+                    //Random sleep time -> Time until the student finish with the bathroom
+                    //Massimo 10 minuti - Minimo 30 secondi
+
+                    int effectiveSecond = TimeManager.calculateEffectiveSecond(Simulation.Simulation.getTimeMultiplier());
+                    long millMax = 60 * 10 * 1000;
+                    long millMin = 30 * 1000;
+                    long millSleepTime = ThreadLocalRandom.current().nextLong(millMin, millMax);
+
+                    Time postCalendarTime = new Time(currentCalendarTime.getTime() + millSleepTime);
+                    long sleepSecond = Math.round(getDifferenceSeconds(currentCalendarTime, postCalendarTime) / (double)effectiveSecond); 
+
+                    Thread.sleep(sleepSecond);
+                    System.out.println(this + " left bathroom at " + postCalendarTime);
+
+                    exitBathroom();
+                }
+            }
+            catch(InterruptedException ex){
+                System.out.println("Interrupted");
+            }
+        }
     }
 
     /**
@@ -113,9 +140,11 @@ public final class Student extends Thread{
         
         Time[] timeHours = new Time[times];
         for(int i = 0; i < timeHours.length;i++){
-            timeHours[i] = new Time((long)random.nextInt(millisInDay));
+            //timeHours[i] = new Time((long)random.nextInt(millisInDay));
+            timeHours[i] = new Time(random.nextInt(24),random.nextInt(60),random.nextInt(60));
+            System.out.println(this + " " + timeHours[i]);
         }
-        timeHours[0] = new Time(0);
+        //timeHours[0] = new Time(0);
         return timeHours;
     }
     
@@ -128,6 +157,7 @@ public final class Student extends Thread{
         long nowMillis = currentTime.getTime();
         
         for(Time toiletTime : whenBathroom){
+            //System.out.println(toiletTime.getTime() + " - " + nowMillis);
             if(toiletTime.getTime() == nowMillis){
                 return true;
             }
@@ -135,6 +165,27 @@ public final class Student extends Thread{
         return false;
     }
 
+    public double getDifferenceSeconds(Time first,Time second){
+        return (second.getTime() - first.getTime()) / 1000;
+    }
+    
+    //THREAD UTILITY
+    private synchronized void resumeThread(){
+        System.out.println("Resumed thread: " + this.name);
+        this.suspended = false;
+        notifyAll();
+    }
+
+    private void suspendThread(){
+        this.suspended = true;
+    }
+    
+    @Override
+    public String toString() {
+        return name + " - " + this.department;
+    }
+    
+    
     // <editor-fold defaultstate="collapsed" desc="Getters & Setters">
     //whenBathroom Getter 
     public Time[] getWhenBathroom() {

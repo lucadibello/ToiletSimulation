@@ -30,7 +30,7 @@ public class TimeManager extends Thread{
     public void run(){
         System.out.println("[Info] Started TimeManager");
         calendario.set(2018, Calendar.JANUARY, 1, 0, 0, 0);
-        int oneMultSec = calculateEffectiveSecond();
+        int oneMultSec = calculateEffectiveSecond(timeMultiplier);
                 
         long startTime = System.currentTimeMillis();
         while(true){
@@ -39,12 +39,12 @@ public class TimeManager extends Thread{
                 
                 //CHECK FOR STUDENTS
                 if(students != null && students.length > 0){
-                    Time currTime = getTime();
+                    Time currTime = getTimeObj();
 
                     for(Student student : students){
                         if(student.checkTime(currTime)){
-                            student.goToBathroom(Simulation.soapContainer,Simulation.paperContainer);
                             System.err.println(student + " is in bathroom");
+                            student.goToBathroom(Simulation.soapContainer,Simulation.paperContainer);
                         }
                     }
                 }
@@ -57,11 +57,11 @@ public class TimeManager extends Thread{
         }
     }
     
-    public int calculateEffectiveSecond(){
+    public static int calculateEffectiveSecond(int timeMultiplier){
         return Math.floorDiv(1000, timeMultiplier);
     }
     
-    public static Time getTime(){
+    public static Time getTimeObj(){
         return new Time(calendario.get(Calendar.HOUR_OF_DAY),calendario.get(Calendar.MINUTE),calendario.get(Calendar.SECOND));
     }
         

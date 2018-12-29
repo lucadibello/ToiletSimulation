@@ -41,26 +41,34 @@ public class Simulation extends Thread{
     private Student[] students;
     
     /**
+     * Describes the time multiplier
+     */
+    private static int timeMultiplier = 1000;
+    
+    /**
      * Constructor.
      * @param students Students that will be in the simulation.
      * @param window Program's main window.
      */
     public Simulation(Student[] students,MainWindow window) {
+        System.out.println("[Info] Simulation started");
+
         this.students = students;
-        this.tManager = new TimeManager(1000,students);
+        this.tManager = new TimeManager(timeMultiplier,students);
         this.gManager = new GuiManager(window, tManager);
-        
-        System.out.println(students[0].getWhenBathroom()[0]);
+
         this.start();
     }
     
     @Override
     public void run(){
-        System.out.println("[Info] Simulation started");
         //Gestisce tutto il ciclo
         gManager.startDateTimeUpdater(10);
         
-        gManager.addStudentPainting(students[0]);
         System.err.println("[Info] Simulation ended");
+    }
+    
+    public static int getTimeMultiplier() {
+        return timeMultiplier;
     }
 }

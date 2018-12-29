@@ -56,9 +56,9 @@ public class MainWindow extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         //Start the simulation
         Student[] studenti = new Student[]{
-            new Student(SchoolDepartment.Draughtsman, 3, 2),
-            new Student(SchoolDepartment.Visitator, 1, 2),
-            new Student(SchoolDepartment.Chemistry, 1, 2)
+            new Student("Luca",SchoolDepartment.Draughtsman, 3, 2),
+            new Student("Finke",SchoolDepartment.Visitator, 1, 2),
+            new Student("Fadil",SchoolDepartment.Chemistry, 1, 2)
         };
         
         Simulation sim = new Simulation(studenti,this);

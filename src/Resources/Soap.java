@@ -39,7 +39,7 @@ public class Soap {
             throw new SoapRunOutException();
         }
     }
-
+    
     @Override
     public String toString() {
         return "Soap container - " + fill_status + " uses left";
