@@ -1,6 +1,8 @@
 package Extra;
 
 import Characters.Student;
+import Data.ToiletHours;
+import GUI.MainWindow;
 import java.sql.Time;
 import java.util.Calendar;
 import Simulation.Simulation;
@@ -37,7 +39,21 @@ public class TimeManager extends Thread{
             if(System.currentTimeMillis() >= startTime + oneMultSec){
                 calendario.set(Calendar.SECOND, calendario.get(Calendar.SECOND) + 1);
                 
-                //CHECK FOR STUDENTS
+                //Check toilet hours
+                if(!GUI.MainWindow.gManager.getBathroomStatus()){
+                    //if it's closed
+                    if(ToiletHours.TOILET_START.getTime() - getTimeObj().getTime() < 0 && !(getTimeObj().getTime() > ToiletHours.TOILET_END.getTime())){
+                        GUI.MainWindow.gManager.openBathroom();
+                    }
+                }
+                else{
+                    //if it's open
+                    if(ToiletHours.TOILET_END.getTime() - getTimeObj().getTime() < 0){
+                        GUI.MainWindow.gManager.closeBathroom();
+                    }
+                }
+                
+                //Check the students
                 if(students != null && students.length > 0){
                     Time currTime = getTimeObj();
 
@@ -60,6 +76,10 @@ public class TimeManager extends Thread{
     
     public static int calculateEffectiveSecond(int timeMultiplier){
         return Math.floorDiv(1000, timeMultiplier);
+    }
+    
+    public static double getDifferenceSeconds(Time first,Time second){
+        return (second.getTime() - first.getTime()) / 1000;
     }
     
     public static Time getTimeObj(){

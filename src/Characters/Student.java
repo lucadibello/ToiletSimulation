@@ -1,5 +1,6 @@
 package Characters;
 import Data.SchoolDepartment;
+import Data.ToiletHours;
 import Extra.TimeManager;
 import Resources.PaperTowel;
 import Resources.Soap;
@@ -96,7 +97,7 @@ public final class Student extends Thread{
 
                     Time postCalendarTime = new Time(currentCalendarTime.getTime() + millSleepTime);
                     //Calculate right sleep time using the "effectiveSecond" attribute
-                    long sleepSecond = Math.round(getDifferenceSeconds(currentCalendarTime, postCalendarTime) / (double)effectiveSecond); 
+                    long sleepSecond = Math.round(TimeManager.getDifferenceSeconds(currentCalendarTime, postCalendarTime) / (double)effectiveSecond); 
 
                     Thread.sleep(sleepSecond);
                     
@@ -128,16 +129,20 @@ public final class Student extends Thread{
      * @return Array of Time objects
      */
     public Time[] generateBathroomTime(int times) {
-        final Random random = new Random();
-        final int millisInDay = 24*60*60*1000;
+        final ThreadLocalRandom random = ThreadLocalRandom.current();
         
         Time[] timeHours = new Time[times];
         for(int i = 0; i < timeHours.length;i++){
-            //timeHours[i] = new Time((long)random.nextInt(millisInDay));
-            timeHours[i] = new Time(random.nextInt(24),random.nextInt(60),random.nextInt(60));
+            //Generate random time
+            timeHours[i] = new Time(
+                    random.nextInt(ToiletHours.TOILET_START.getHours(), ToiletHours.TOILET_END.getHours()),
+                    random.nextInt(ToiletHours.TOILET_START.getMinutes(), ToiletHours.TOILET_END.getMinutes()),
+                    random.nextInt(60)
+            );
+            
             System.out.println(this + " " + timeHours[i]);
         }
-        //timeHours[0] = new Time(0);
+
         return timeHours;
     }
     
@@ -156,10 +161,6 @@ public final class Student extends Thread{
             }
         }
         return false;
-    }
-
-    public double getDifferenceSeconds(Time first,Time second){
-        return (second.getTime() - first.getTime()) / 1000;
     }
     
     @Override

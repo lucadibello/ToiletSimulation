@@ -45,6 +45,30 @@ public class GuiManager {
         dateTimeUpdater.start();
     }
     
+    public boolean getBathroomStatus(){
+        return frame.bathroomStatus;
+    }
+    
+    public void closeBathroom(){
+        //Se è aperto lo chiudo
+        if(getBathroomStatus()){
+            frame.bathroomStatus = false;
+            frame.repaint();
+            
+            log("[Info] Bathroom closed");
+        }
+    }
+    
+    public void openBathroom(){
+        //Se è chiuso lo apro
+        if(!getBathroomStatus()){
+            frame.bathroomStatus = true;
+            frame.repaint();
+
+            log("[Info] Bathroom is now open");
+        }
+    }
+    
     public void log(String text){
         frame.textAreaLog.append(text + "\n");
     }

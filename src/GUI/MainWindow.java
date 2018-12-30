@@ -136,6 +136,8 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     public static GuiManager gManager;
+    public static boolean bathroomStatus = false;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private GUI.BathroomPanel bathroomPanel1;
     private javax.swing.JLabel jLabel1;
