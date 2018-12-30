@@ -3,9 +3,10 @@ package GUI;
 import Characters.Student;
 import Data.SchoolDepartment;
 import Simulation.Simulation;
+
 /**
  *
- * @author luca6
+ * @author Luca Di Bello
  */
 public class MainWindow extends javax.swing.JFrame {
 
@@ -14,6 +15,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
+        gManager = new GuiManager(this);
     }
 
     /**
@@ -28,9 +30,17 @@ public class MainWindow extends javax.swing.JFrame {
         panelInfos = new javax.swing.JPanel();
         labelDate = new javax.swing.JLabel();
         labelTime = new javax.swing.JLabel();
+        panelContent = new javax.swing.JPanel();
         bathroomPanel1 = new GUI.BathroomPanel();
+        tabPanel = new javax.swing.JTabbedPane();
+        logTabContent = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textAreaLog = new javax.swing.JTextArea();
+        toiletHoursTabContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1020, 720));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -48,20 +58,46 @@ public class MainWindow extends javax.swing.JFrame {
         panelInfos.add(labelTime);
 
         getContentPane().add(panelInfos, java.awt.BorderLayout.PAGE_END);
-        getContentPane().add(bathroomPanel1, java.awt.BorderLayout.CENTER);
+
+        panelContent.setLayout(new java.awt.BorderLayout());
+        panelContent.add(bathroomPanel1, java.awt.BorderLayout.CENTER);
+
+        tabPanel.setPreferredSize(new java.awt.Dimension(300, 140));
+
+        logTabContent.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setText("Application Log");
+        logTabContent.add(jLabel1, java.awt.BorderLayout.NORTH);
+
+        textAreaLog.setColumns(20);
+        textAreaLog.setRows(5);
+        textAreaLog.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jScrollPane1.setViewportView(textAreaLog);
+
+        logTabContent.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        tabPanel.addTab("Log", logTabContent);
+
+        toiletHoursTabContent.setLayout(new java.awt.GridBagLayout());
+        tabPanel.addTab("Toilet Hours", toiletHoursTabContent);
+
+        panelContent.add(tabPanel, java.awt.BorderLayout.EAST);
+
+        getContentPane().add(panelContent, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        //Start the simulation
+        //Students of the simulation
         Student[] studenti = new Student[]{
             new Student("Luca",SchoolDepartment.Draughtsman, 3, 2),
             new Student("Finke",SchoolDepartment.Visitator, 1, 2),
             new Student("Fadil",SchoolDepartment.Chemistry, 1, 2)
         };
-        
-        Simulation sim = new Simulation(studenti,this);
+
+        //Start the simulation
+        new Simulation(studenti,gManager);
     }//GEN-LAST:event_formWindowOpened
 
     /**
@@ -98,11 +134,19 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    public static GuiManager gManager;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private GUI.BathroomPanel bathroomPanel1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JLabel labelDate;
     public javax.swing.JLabel labelTime;
+    private javax.swing.JPanel logTabContent;
+    private javax.swing.JPanel panelContent;
     private javax.swing.JPanel panelInfos;
+    private javax.swing.JTabbedPane tabPanel;
+    public javax.swing.JTextArea textAreaLog;
+    private javax.swing.JPanel toiletHoursTabContent;
     // End of variables declaration//GEN-END:variables
 }

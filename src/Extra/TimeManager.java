@@ -28,7 +28,7 @@ public class TimeManager extends Thread{
 
     @Override
     public void run(){
-        System.out.println("[Info] Started TimeManager");
+        GUI.MainWindow.gManager.log("[Info] Started TimeManager");
         calendario.set(2018, Calendar.JANUARY, 1, 0, 0, 0);
         int oneMultSec = calculateEffectiveSecond(timeMultiplier);
                 
@@ -43,13 +43,14 @@ public class TimeManager extends Thread{
 
                     for(Student student : students){
                         if(student.checkTime(currTime)){
-                            System.err.println(student + " is in bathroom");
+                            GUI.MainWindow.gManager.log(" ");
+                            GUI.MainWindow.gManager.log(student + " is in bathroom");
                             student.goToBathroom(Simulation.soapContainer,Simulation.paperContainer);
                         }
                     }
                 }
                 else{
-                    System.out.println("[Time-check error] TimeManager - no users to check");
+                    GUI.MainWindow.gManager.log("[Time-check error] TimeManager - no users to check");
                 }
                 
                 startTime = System.currentTimeMillis();

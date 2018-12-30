@@ -55,6 +55,7 @@ public final class Student extends Thread{
      * @param department Student department.
      * @param schoolYear Studend school year.
      * @param timesPerDay How many times during the day the student have to go to the bathroom. 
+     * @param name Name of the student.
      */
     public Student(String name,SchoolDepartment department, int schoolYear, int timesPerDay) {
         this.name = name;
@@ -69,12 +70,6 @@ public final class Student extends Thread{
     public void goToBathroom(Soap soap, PaperTowel paper){
         //Set flag
         isInBathroom = true;
-        System.out.println("---------------------------------------------");
-        System.out.println(this + "is going to bathroom");
-
-        resumeThread();
-        
-        //this.run();
     }
     
     public void exitBathroom(){
@@ -87,36 +82,34 @@ public final class Student extends Thread{
     @Override
     public void run(){
         while(true){
-
             try{
-                synchronized(this){
-                    while(suspended){
-                        wait();
-                    }
-                }
-
                 if(isInBathroom){
                     Time currentCalendarTime = TimeManager.getTimeObj();
-                    System.out.println(this + " entered at " + currentCalendarTime);
-                    //Random sleep time -> Time until the student finish with the bathroom
-                    //Massimo 10 minuti - Minimo 30 secondi
-
+                    GUI.MainWindow.gManager.log(this + " entered at " + currentCalendarTime);
+                    //Max 10 Minutes - Min 30 Seconds
                     int effectiveSecond = TimeManager.calculateEffectiveSecond(Simulation.Simulation.getTimeMultiplier());
                     long millMax = 60 * 10 * 1000;
                     long millMin = 30 * 1000;
+                    
+                    //Random sleep time -> Time until the student finish with the bathroom
                     long millSleepTime = ThreadLocalRandom.current().nextLong(millMin, millMax);
 
                     Time postCalendarTime = new Time(currentCalendarTime.getTime() + millSleepTime);
+                    //Calculate right sleep time using the "effectiveSecond" attribute
                     long sleepSecond = Math.round(getDifferenceSeconds(currentCalendarTime, postCalendarTime) / (double)effectiveSecond); 
 
                     Thread.sleep(sleepSecond);
-                    System.out.println(this + " left bathroom at " + postCalendarTime);
-
+                    
+                    GUI.MainWindow.gManager.log(this + " left bathroom at " + postCalendarTime);
                     exitBathroom();
+                }
+                else{
+                    //Little pause -> Less CPU work
+                    Thread.sleep(100);
                 }
             }
             catch(InterruptedException ex){
-                System.out.println("Interrupted");
+                System.out.println(this + " interrupted");
             }
         }
     }
@@ -167,17 +160,6 @@ public final class Student extends Thread{
 
     public double getDifferenceSeconds(Time first,Time second){
         return (second.getTime() - first.getTime()) / 1000;
-    }
-    
-    //THREAD UTILITY
-    private synchronized void resumeThread(){
-        System.out.println("Resumed thread: " + this.name);
-        this.suspended = false;
-        notifyAll();
-    }
-
-    private void suspendThread(){
-        this.suspended = true;
     }
     
     @Override

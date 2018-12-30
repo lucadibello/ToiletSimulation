@@ -1,8 +1,6 @@
 package Simulation;
 
-
 import Characters.Student;
-import Data.SchoolDepartment;
 import Extra.TimeManager;
 import GUI.GuiManager;
 import GUI.MainWindow;
@@ -33,7 +31,7 @@ public class Simulation extends Thread{
     /**
      * Describes the object that manage the gui.
      */
-    private final GUI.GuiManager gManager;
+    public final GUI.GuiManager gManager;
     
     /**
      * Describes the students that are in the simulation.
@@ -48,24 +46,21 @@ public class Simulation extends Thread{
     /**
      * Constructor.
      * @param students Students that will be in the simulation.
-     * @param window Program's main window.
      */
-    public Simulation(Student[] students,MainWindow window) {
-        System.out.println("[Info] Simulation started");
-
+    public Simulation(Student[] students,GuiManager gManager) {
         this.students = students;
         this.tManager = new TimeManager(timeMultiplier,students);
-        this.gManager = new GuiManager(window, tManager);
+        this.gManager = gManager;
 
         this.start();
+        
+        gManager.log("[Info] Simulation started :)");
     }
     
     @Override
     public void run(){
         //Gestisce tutto il ciclo
-        gManager.startDateTimeUpdater(10);
-        
-        System.err.println("[Info] Simulation ended");
+        gManager.startDateTimeUpdater(tManager,10);
     }
     
     public static int getTimeMultiplier() {

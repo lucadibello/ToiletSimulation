@@ -2,20 +2,17 @@ package GUI;
 
 import Characters.Student;
 import Extra.TimeManager;
-import javax.swing.JFrame;
 
 /**
- *
+ * This class is used for manage the GUI dynamically
  * @author Luca Di Bello
  */
 public class GuiManager {
 
     private MainWindow frame;
-    private TimeManager tManager;
     
-    public GuiManager(MainWindow frame, TimeManager tManager) {
+    public GuiManager(MainWindow frame) {
         this.frame = frame;
-        this.tManager = tManager;
     }
     
     public void addStudentPainting(Student student){
@@ -27,7 +24,7 @@ public class GuiManager {
     /**
      * Questo metodo si occupa di aggiornare il label della data e del tempo.
      */
-    public void startDateTimeUpdater(int timeBetweenUpdates){
+    public void startDateTimeUpdater(TimeManager tManager, int timeBetweenUpdates){
         //Start new method in different thread
         Thread dateTimeUpdater = new Thread(new Runnable() {
             @Override
@@ -35,16 +32,20 @@ public class GuiManager {
                 while(true){
                     try{
                         Thread.sleep(timeBetweenUpdates);
-                        
+
                         frame.labelTime.setText("Time: " + tManager.getTime(":"));
                         frame.labelDate.setText("Date: " + tManager.getCurrentDate("-"));
                     }
                     catch(InterruptedException ex){
-                        System.err.println("[Error] Can't update date and time");
+                        log("[Error] Can't update date and time");
                     }
                 }
             }
         });  
         dateTimeUpdater.start();
+    }
+    
+    public void log(String text){
+        frame.textAreaLog.append(text + "\n");
     }
 }
