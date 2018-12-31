@@ -38,9 +38,10 @@ public class MainWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaLog = new javax.swing.JTextArea();
         toiletHoursTabContent = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableStudentBathroomHours = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1020, 720));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -62,7 +63,7 @@ public class MainWindow extends javax.swing.JFrame {
         panelContent.setLayout(new java.awt.BorderLayout());
         panelContent.add(bathroomPanel1, java.awt.BorderLayout.CENTER);
 
-        tabPanel.setPreferredSize(new java.awt.Dimension(300, 140));
+        tabPanel.setPreferredSize(new java.awt.Dimension(350, 200));
 
         logTabContent.setLayout(new java.awt.BorderLayout());
 
@@ -78,7 +79,44 @@ public class MainWindow extends javax.swing.JFrame {
 
         tabPanel.addTab("Log", logTabContent);
 
-        toiletHoursTabContent.setLayout(new java.awt.GridBagLayout());
+        toiletHoursTabContent.setLayout(new java.awt.BorderLayout());
+
+        jTableStudentBathroomHours.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Name", "Department", "School year", "Bathroom Time"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableStudentBathroomHours.setName(""); // NOI18N
+        jTableStudentBathroomHours.setPreferredSize(new java.awt.Dimension(300, 0));
+        jTableStudentBathroomHours.setRequestFocusEnabled(false);
+        jTableStudentBathroomHours.setRowHeight(25);
+        jTableStudentBathroomHours.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableStudentBathroomHours.getTableHeader().setResizingAllowed(false);
+        jScrollPane2.setViewportView(jTableStudentBathroomHours);
+
+        toiletHoursTabContent.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
         tabPanel.addTab("Toilet Hours", toiletHoursTabContent);
 
         panelContent.add(tabPanel, java.awt.BorderLayout.EAST);
@@ -142,6 +180,8 @@ public class MainWindow extends javax.swing.JFrame {
     private GUI.BathroomPanel bathroomPanel1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JTable jTableStudentBathroomHours;
     public javax.swing.JLabel labelDate;
     public javax.swing.JLabel labelTime;
     private javax.swing.JPanel logTabContent;

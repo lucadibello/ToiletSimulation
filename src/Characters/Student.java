@@ -1,6 +1,8 @@
 package Characters;
 import Data.SchoolDepartment;
 import Data.ToiletHours;
+import Exceptions.PaperTowelRunOut;
+import Exceptions.SoapRunOutException;
 import Extra.TimeManager;
 import Resources.PaperTowel;
 import Resources.Soap;
@@ -27,10 +29,6 @@ public final class Student extends Thread{
     private int schoolYear;
     
     /**
-     * Describes the student name.
-     */
-    private String name;
-    /**
      * Describes how many times the students go to the bathroom during the day.
      */
     private int timesPerDay;
@@ -44,11 +42,6 @@ public final class Student extends Thread{
      * Describes when the student have to go to the bathroom.
      */
     private Time[] whenBathroom;
-    
-    /**
-     * A flag for suspend the thread.
-     */
-    private boolean suspended = true;
     // </editor-fold>
     
     /**
@@ -59,18 +52,20 @@ public final class Student extends Thread{
      * @param name Name of the student.
      */
     public Student(String name,SchoolDepartment department, int schoolYear, int timesPerDay) {
-        this.name = name;
+        setName(name);
         setDepartment(department);
         setSchoolYear(schoolYear);
         setTimesPerDay(timesPerDay);
-        whenBathroom = generateBathroomTime(timesPerDay);
+        whenBathroom = generateBathroomTime();
         
         this.start();
     }
     
-    public void goToBathroom(Soap soap, PaperTowel paper){
+    public void goToBathroom(){
         //Set flag
         isInBathroom = true;
+        
+        //Need to use soap and paper
     }
     
     public void exitBathroom(){
@@ -115,6 +110,14 @@ public final class Student extends Thread{
         }
     }
 
+    public void washHands(Soap soap) throws SoapRunOutException{
+        soap.useSoap();
+    }
+    
+    public void dryHands(PaperTowel ptw) throws PaperTowelRunOut{
+        ptw.grabPaper();
+    }
+    
     /**
      * Method used for painting the student in the GUI
      * @param g Graphics object
@@ -128,10 +131,10 @@ public final class Student extends Thread{
      * @param times Time objects to generate 
      * @return Array of Time objects
      */
-    public Time[] generateBathroomTime(int times) {
+    private Time[] generateBathroomTime() {
         final ThreadLocalRandom random = ThreadLocalRandom.current();
         
-        Time[] timeHours = new Time[times];
+        Time[] timeHours = new Time[timesPerDay];
         for(int i = 0; i < timeHours.length;i++){
             //Generate random time
             timeHours[i] = new Time(
@@ -165,7 +168,7 @@ public final class Student extends Thread{
     
     @Override
     public String toString() {
-        return name + " - " + this.department;
+        return getName() + " - " + this.department;
     }
     
     
@@ -173,6 +176,11 @@ public final class Student extends Thread{
     //whenBathroom Getter 
     public Time[] getWhenBathroom() {
         return whenBathroom;
+    }
+    
+    //whenBathroom Setter
+    public void generateWhenBathroom() {
+        this.whenBathroom = generateBathroomTime();
     }
     
     //isInBathroom Getter & Setter
@@ -225,6 +233,5 @@ public final class Student extends Thread{
             this.timesPerDay = 0; 
         }
     }
-
     // </editor-fold>
 }
