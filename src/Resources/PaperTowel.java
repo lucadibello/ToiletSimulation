@@ -8,6 +8,9 @@ import Exceptions.PaperTowelRunOut;
  */
 public class PaperTowel {
     
+    /**
+     * Describes how many paper towels can be grabbed.
+     */
     public final int FILL_STANDARD = 100;
     
     /**

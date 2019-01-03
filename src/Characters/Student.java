@@ -141,8 +141,6 @@ public final class Student extends Thread{
                     random.nextInt(ToiletHours.TOILET_START.getMinutes(), ToiletHours.TOILET_END.getMinutes()),
                     random.nextInt(60)
             );
-            
-            System.out.println(this + " " + timeHours[i]);
         }
 
         return timeHours;
@@ -228,9 +226,9 @@ public final class Student extends Thread{
         }
     }
     // </editor-fold>
-    
+
     @Override
     public String toString() {
-        return getName() + " - " + this.department;
+        return "["+getName() + " - " + this.department+"]";
     }
 }

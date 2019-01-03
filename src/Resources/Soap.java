@@ -7,7 +7,10 @@ import Exceptions.SoapRunOutException;
  * @author Luca Di Bello
  */
 public class Soap {
-   
+    
+    /**
+     * Describes how many times the soap can be used.
+     */
     public final int FILL_STANDARD = 100;
 
     /**

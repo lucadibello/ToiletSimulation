@@ -40,6 +40,19 @@ public class MainWindow extends javax.swing.JFrame {
         toiletHoursTabContent = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableStudentBathroomHours = new javax.swing.JTable();
+        statusPanel = new javax.swing.JPanel();
+        containersPanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        labelSoapFill = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        labelPaperFill = new javax.swing.JLabel();
+        studentStatsPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        labelNoWashTimes = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        labelNoDryTimes = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        labelTimesInBathroom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -119,6 +132,50 @@ public class MainWindow extends javax.swing.JFrame {
 
         tabPanel.addTab("Toilet Hours", toiletHoursTabContent);
 
+        statusPanel.setLayout(new java.awt.GridLayout(2, 0));
+
+        containersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Containers"));
+        containersPanel.setLayout(new java.awt.GridLayout(2, 2));
+
+        jLabel2.setText("Soap fill status:");
+        containersPanel.add(jLabel2);
+
+        labelSoapFill.setText("jLabel4");
+        containersPanel.add(labelSoapFill);
+
+        jLabel3.setText("Paper fill status:");
+        containersPanel.add(jLabel3);
+
+        labelPaperFill.setText("jLabel5");
+        containersPanel.add(labelPaperFill);
+
+        statusPanel.add(containersPanel);
+
+        studentStatsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Students statistics"));
+        studentStatsPanel.setLayout(new java.awt.GridLayout(3, 2));
+
+        jLabel6.setText("\"No wash\" times:");
+        studentStatsPanel.add(jLabel6);
+
+        labelNoWashTimes.setText("jLabel8");
+        studentStatsPanel.add(labelNoWashTimes);
+
+        jLabel7.setText("\"No dry\" times:");
+        studentStatsPanel.add(jLabel7);
+
+        labelNoDryTimes.setText("jLabel9");
+        studentStatsPanel.add(labelNoDryTimes);
+
+        jLabel4.setText("Times in bathroom:");
+        studentStatsPanel.add(jLabel4);
+
+        labelTimesInBathroom.setText("jLabel5");
+        studentStatsPanel.add(labelTimesInBathroom);
+
+        statusPanel.add(studentStatsPanel);
+
+        tabPanel.addTab("Status", statusPanel);
+
         panelContent.add(tabPanel, java.awt.BorderLayout.EAST);
 
         getContentPane().add(panelContent, java.awt.BorderLayout.CENTER);
@@ -130,14 +187,14 @@ public class MainWindow extends javax.swing.JFrame {
         //Students of the simulation
         Student[] studenti = new Student[]{
             new Student("Luca",SchoolDepartment.Draughtsman, 3, 20),
-            new Student("Finke",SchoolDepartment.Visitator, 1, 20),
-            new Student("Fadil",SchoolDepartment.Cook, 1, 20),
+            new Student("Finke",SchoolDepartment.Visitator, 2, 20),
+            new Student("Fadil",SchoolDepartment.Cook, 4, 20),
             new Student("Toscanelli",SchoolDepartment.Chemistry, 1, 20),
             new Student("Lazzarus",SchoolDepartment.ComputerScience, 1, 20)
         };
 
         //Start the simulation
-        new Simulation(studenti,gManager);
+        new Simulation(studenti,gManager,1000);
     }//GEN-LAST:event_formWindowOpened
 
     /**
@@ -180,15 +237,28 @@ public class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private GUI.BathroomPanel bathroomPanel1;
+    private javax.swing.JPanel containersPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     public javax.swing.JTable jTableStudentBathroomHours;
     public javax.swing.JLabel labelDate;
+    public javax.swing.JLabel labelNoDryTimes;
+    public javax.swing.JLabel labelNoWashTimes;
+    public javax.swing.JLabel labelPaperFill;
+    public javax.swing.JLabel labelSoapFill;
     public javax.swing.JLabel labelTime;
+    public javax.swing.JLabel labelTimesInBathroom;
     private javax.swing.JPanel logTabContent;
     private javax.swing.JPanel panelContent;
     private javax.swing.JPanel panelInfos;
+    private javax.swing.JPanel statusPanel;
+    private javax.swing.JPanel studentStatsPanel;
     private javax.swing.JTabbedPane tabPanel;
     public javax.swing.JTextArea textAreaLog;
     private javax.swing.JPanel toiletHoursTabContent;

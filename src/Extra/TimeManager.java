@@ -7,13 +7,17 @@ import Exceptions.SoapRunOutException;
 import java.sql.Time;
 import java.util.Calendar;
 import Simulation.Simulation;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * This class is used for controlling time.
  * @author Luca Di Bello
  */
 public class TimeManager extends Thread{
-    private int timeMultiplier = 1;
+    /**
+     * How many times the time 
+     */
+    private int timeMultiplier;
 
     private static Calendar calendario = Calendar.getInstance();
 
@@ -78,19 +82,46 @@ public class TimeManager extends Thread{
                         if(student.checkTime(calendarTimeObj)){
                             GUI.MainWindow.gManager.log(" ");
                             GUI.MainWindow.gManager.log(student + " is in bathroom");
-                            student.goToBathroom();
                             
-                            try{
-                                student.washHands(Simulation.soapContainer);
-                                student.dryHands(Simulation.paperContainer);
+                            student.goToBathroom();
+                            Simulation.increaseTimesInBathroom();
+
+                            //10% students don't wash their hands
+                            final int NO_WASH_PROBABILITY = 10;
+                            
+                            int probability = ThreadLocalRandom.current().nextInt(1,100 + 1);
+                            
+                            if(probability > NO_WASH_PROBABILITY){
+                                try{
+                                    student.washHands(Simulation.soapContainer);
+
+                                    //30% students don't dry their hands
+                                    final int NO_DRY_PROBABILITY = 30;
+
+                                    probability = ThreadLocalRandom.current().nextInt(1,100+1);
+                                    if(probability > NO_DRY_PROBABILITY){
+                                        student.dryHands(Simulation.paperContainer);
+                                    }
+                                    else{
+                                        Simulation.increaseStatNoDry();
+                                    }
+                                    
+                                }
+                                catch(PaperTowelRunOut ex){
+                                    Simulation.paperContainer.refill();
+                                    System.out.println(Simulation.paperContainer.getFillStatus());
+                                }
+                                catch(SoapRunOutException ex){
+                                    Simulation.soapContainer.refill();
+                                }
                             }
-                            catch(PaperTowelRunOut ex){
-                                Simulation.paperContainer.refill();
-                                System.out.println(Simulation.paperContainer.getFillStatus());
+                            else{
+                                //Student doesn't wash his hands
+                                Simulation.increaseStatNoWash();
                             }
-                            catch(SoapRunOutException ex){
-                                Simulation.soapContainer.refill();
-                            }
+                            
+                            //Update GUI data
+                            GUI.MainWindow.gManager.updateStats();
                         }
                     }
                 }

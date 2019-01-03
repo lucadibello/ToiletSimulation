@@ -1,6 +1,5 @@
 package GUI;
 
-
 import Characters.Student;
 import Data.ToiletHours;
 import Objects.Toilet;

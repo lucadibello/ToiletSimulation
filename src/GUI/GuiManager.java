@@ -15,10 +15,15 @@ public class GuiManager {
 
     private final MainWindow frame;
     
+    /**
+     * Constructor method
+     * @param frame Main window (where all the object are contained)
+     */
     public GuiManager(MainWindow frame) {
         this.frame = frame;
     }
     
+    //WIP
     public void addStudentPainting(Student student){
         if(student.isInBathroom()){
             BathroomPanel.addStudents(student);
@@ -49,10 +54,17 @@ public class GuiManager {
         dateTimeUpdater.start();
     }
     
+    /**
+     * Getter method for the frame's attribute bathroomStatus.
+     * @return True if the bathroom is open, otherwise false.
+     */
     public boolean getBathroomStatus(){
         return frame.bathroomStatus;
     }
     
+    /**
+     * This method is used for closing the bathroom. It will also repaint the panel.
+     */
     public void closeBathroom(){
         //Se è aperto lo chiudo
         if(getBathroomStatus()){
@@ -63,6 +75,9 @@ public class GuiManager {
         }
     }
     
+    /**
+     * This method is used for opening the bathroom. It will also repaint the panel.
+     */
     public void openBathroom(){
         //Se è chiuso lo apro
         if(!getBathroomStatus()){
@@ -73,6 +88,10 @@ public class GuiManager {
         }
     }
     
+    /**
+     * This method is used for updating the "student hours" table.
+     * @param students Students to add to the table.
+     */
     public void updateStudentHours(Student[] students){
         DefaultTableModel model = (DefaultTableModel) frame.jTableStudentBathroomHours.getModel();
         model.setRowCount(0);
@@ -111,6 +130,18 @@ public class GuiManager {
         }
     }
     
+    public void updateStats(){
+        frame.labelPaperFill.setText(Integer.toString(Simulation.Simulation.paperContainer.getFillStatus()));
+        frame.labelSoapFill.setText(Integer.toString(Simulation.Simulation.soapContainer.getFillStatus()));
+        frame.labelNoWashTimes.setText(Integer.toString(Simulation.Simulation.getStatNoWash()));
+        frame.labelNoDryTimes.setText(Integer.toString(Simulation.Simulation.getStatNoDry()));
+        frame.labelTimesInBathroom.setText(Integer.toString(Simulation.Simulation.getTimesInBathroom()));
+    }
+    
+    /**
+     * This method writes a passed text to the textAreaLog textBox.
+     * @param text Text to append.
+     */
     public void log(String text){
         frame.textAreaLog.append(text + "\n");
     }
