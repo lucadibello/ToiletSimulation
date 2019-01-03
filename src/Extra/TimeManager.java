@@ -4,6 +4,7 @@ import Characters.Student;
 import Data.ToiletHours;
 import Exceptions.PaperTowelRunOut;
 import Exceptions.SoapRunOutException;
+import GUI.MainWindow;
 import java.sql.Time;
 import java.util.Calendar;
 import Simulation.Simulation;
@@ -80,12 +81,13 @@ public class TimeManager extends Thread{
                 else{
                     for(Student student : students){
                         if(student.checkTime(calendarTimeObj)){
-                            GUI.MainWindow.gManager.log(" ");
                             GUI.MainWindow.gManager.log(student + " is in bathroom");
                             
                             student.goToBathroom();
-                            Simulation.increaseTimesInBathroom();
-
+                            
+                            student.increaseTimesInBathroom();
+                            MainWindow.simulation.increaseTotalTimesInBathroom();
+                            
                             //10% students don't wash their hands
                             final int NO_WASH_PROBABILITY = 10;
                             
@@ -103,9 +105,9 @@ public class TimeManager extends Thread{
                                         student.dryHands(Simulation.paperContainer);
                                     }
                                     else{
-                                        Simulation.increaseStatNoDry();
+                                        student.increaseTimesNoDry();
+                                        MainWindow.simulation.increaseTotalTimesNoDry();
                                     }
-                                    
                                 }
                                 catch(PaperTowelRunOut ex){
                                     Simulation.paperContainer.refill();
@@ -117,7 +119,8 @@ public class TimeManager extends Thread{
                             }
                             else{
                                 //Student doesn't wash his hands
-                                Simulation.increaseStatNoWash();
+                                student.increaseTimesNoWash();
+                                MainWindow.simulation.increaseTotalTimesNoWash();
                             }
                             
                             //Update GUI data

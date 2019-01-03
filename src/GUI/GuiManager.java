@@ -1,10 +1,14 @@
 package GUI;
 
 import Characters.Student;
+import static Characters.Student.STUDENT_RADIUS;
 import Extra.TimeManager;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import Simulation.Simulation;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public class GuiManager {
 
     private final MainWindow frame;
+    private Simulation simulation;
     
     /**
      * Constructor method
@@ -22,12 +27,16 @@ public class GuiManager {
     public GuiManager(MainWindow frame) {
         this.frame = frame;
     }
+    public void setSimulation(Simulation sim){
+        this.simulation = sim;
+    }
     
-    //WIP
     public void addStudentPainting(Student student){
-        if(student.isInBathroom()){
-            BathroomPanel.addStudents(student);
-        }
+        BathroomPanel.addStudent(student);
+    }
+    
+    public void setStudentsPainting(Student[] students){
+        BathroomPanel.setStudents(students);
     }
     
     /**
@@ -43,7 +52,7 @@ public class GuiManager {
                         Thread.sleep(timeBetweenUpdates);
 
                         frame.labelTime.setText("Time: " + tManager.getTime(":"));
-                        frame.labelDate.setText("Date: " + tManager.getCurrentDate("-"));
+                        frame.labelDate.setText("Date: " + tManager.getCurrentDate("/"));
                     }
                     catch(InterruptedException ex){
                         log("[Error] Can't update date and time");
@@ -86,6 +95,19 @@ public class GuiManager {
 
             log("[Info] Bathroom is now open");
         }
+    }
+    
+    public void updatePaintStudent(Student source){
+        Point positionGUI = source.paintPosition;
+        
+        Rectangle clipArea = new Rectangle(
+                positionGUI.x * (STUDENT_RADIUS*2),
+                positionGUI.y * (STUDENT_RADIUS*2),
+                STUDENT_RADIUS*2,
+                STUDENT_RADIUS*2
+        );
+        
+        frame.bathroomPanel1.repaint(clipArea);
     }
     
     /**
@@ -131,11 +153,18 @@ public class GuiManager {
     }
     
     public void updateStats(){
-        frame.labelPaperFill.setText(Integer.toString(Simulation.Simulation.paperContainer.getFillStatus()));
-        frame.labelSoapFill.setText(Integer.toString(Simulation.Simulation.soapContainer.getFillStatus()));
-        frame.labelNoWashTimes.setText(Integer.toString(Simulation.Simulation.getStatNoWash()));
-        frame.labelNoDryTimes.setText(Integer.toString(Simulation.Simulation.getStatNoDry()));
-        frame.labelTimesInBathroom.setText(Integer.toString(Simulation.Simulation.getTimesInBathroom()));
+        frame.labelPaperFill.setText(Integer.toString(Simulation.paperContainer.getFillStatus()));
+        frame.labelSoapFill.setText(Integer.toString(Simulation.soapContainer.getFillStatus()));
+        
+        if(simulation != null){
+            frame.labelNoWashTimes.setText(Integer.toString(simulation.getTotalTimesNoWash()));
+            frame.labelNoDryTimes.setText(Integer.toString(simulation.getTotalTimesNoDry()));
+            frame.labelTimesInBathroom.setText(Integer.toString(simulation.getTotalTimesInBathroom()));
+        }
+        else{
+            System.err.println("[Error] Can't calculate simulation's statistics without a reference to the simulation. (Did you do setSimulation(Simulation)?");
+        }
+        
     }
     
     /**

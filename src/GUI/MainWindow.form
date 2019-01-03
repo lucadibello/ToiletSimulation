@@ -3,6 +3,9 @@
 <Form version="1.6" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[1000, 500]"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -45,7 +48,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="labelDate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Current Date:"/>
+            <Property name="text" type="java.lang.String" value="Current Date: &lt;CURRENT DATE&gt;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
               <Color id="Cursore predefinito"/>
             </Property>
@@ -56,7 +59,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="labelTime">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Current Time:"/>
+            <Property name="text" type="java.lang.String" value="Current Time: &lt;CURRENT TIME OF THE DAY&gt;"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -74,6 +77,9 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
       <SubComponents>
         <Container class="GUI.BathroomPanel" name="bathroomPanel1">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
               <BorderConstraints direction="Center"/>
@@ -260,7 +266,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="labelSoapFill">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jLabel4"/>
+                        <Property name="text" type="java.lang.String" value="&lt;SOAP STATUS&gt;"/>
                       </Properties>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -273,7 +279,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="labelPaperFill">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jLabel5"/>
+                        <Property name="text" type="java.lang.String" value="&lt;PAPER STATUS&gt;"/>
                       </Properties>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -302,7 +308,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="labelNoWashTimes">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jLabel8"/>
+                        <Property name="text" type="java.lang.String" value="&lt;NO WASH TIMES&gt;"/>
                       </Properties>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -315,7 +321,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="labelNoDryTimes">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jLabel9"/>
+                        <Property name="text" type="java.lang.String" value="&lt;NO DRY TIMES&gt;"/>
                       </Properties>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -328,7 +334,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="labelTimesInBathroom">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jLabel5"/>
+                        <Property name="text" type="java.lang.String" value="&lt;IN-BATHROOM TIMES&gt;"/>
                       </Properties>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

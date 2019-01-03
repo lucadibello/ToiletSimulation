@@ -15,7 +15,25 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
+        
         gManager = new GuiManager(this);
+
+        //Students of the simulation
+        Student[] studenti = new Student[]{
+            new Student("Luca",SchoolDepartment.ComputerScience, 3, 6),
+            new Student("Finke",SchoolDepartment.Visitator, 2, 2),
+            new Student("Rauso",SchoolDepartment.Cook, 4, 3),
+            new Student("Carlo",SchoolDepartment.Chemistry, 1, 5),
+            new Student("Fadil",SchoolDepartment.ComputerScience, 1, 10),
+            new Student("Ghila",SchoolDepartment.Chemistry, 1, 3),
+            new Student("Lazza",SchoolDepartment.Chemistry, 1, 7),
+            new Student("Tosca",SchoolDepartment.Chemistry, 1, 9),
+            new Student("Paolo",SchoolDepartment.Chemistry, 1, 1),
+            new Student("Peter",SchoolDepartment.Chemistry, 1, 15),
+        };
+
+        //Start the simulation
+        simulation = new Simulation(studenti,gManager,1000);
     }
 
     /**
@@ -55,6 +73,7 @@ public class MainWindow extends javax.swing.JFrame {
         labelTimesInBathroom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1000, 500));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -64,11 +83,11 @@ public class MainWindow extends javax.swing.JFrame {
         panelInfos.setBackground(new java.awt.Color(204, 204, 255));
         panelInfos.setLayout(new java.awt.GridLayout(2, 1));
 
-        labelDate.setText("Current Date:");
+        labelDate.setText("Current Date: <CURRENT DATE>");
         labelDate.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         panelInfos.add(labelDate);
 
-        labelTime.setText("Current Time:");
+        labelTime.setText("Current Time: <CURRENT TIME OF THE DAY>");
         panelInfos.add(labelTime);
 
         getContentPane().add(panelInfos, java.awt.BorderLayout.PAGE_END);
@@ -140,13 +159,13 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel2.setText("Soap fill status:");
         containersPanel.add(jLabel2);
 
-        labelSoapFill.setText("jLabel4");
+        labelSoapFill.setText("<SOAP STATUS>");
         containersPanel.add(labelSoapFill);
 
         jLabel3.setText("Paper fill status:");
         containersPanel.add(jLabel3);
 
-        labelPaperFill.setText("jLabel5");
+        labelPaperFill.setText("<PAPER STATUS>");
         containersPanel.add(labelPaperFill);
 
         statusPanel.add(containersPanel);
@@ -157,19 +176,19 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel6.setText("\"No wash\" times:");
         studentStatsPanel.add(jLabel6);
 
-        labelNoWashTimes.setText("jLabel8");
+        labelNoWashTimes.setText("<NO WASH TIMES>");
         studentStatsPanel.add(labelNoWashTimes);
 
         jLabel7.setText("\"No dry\" times:");
         studentStatsPanel.add(jLabel7);
 
-        labelNoDryTimes.setText("jLabel9");
+        labelNoDryTimes.setText("<NO DRY TIMES>");
         studentStatsPanel.add(labelNoDryTimes);
 
         jLabel4.setText("Times in bathroom:");
         studentStatsPanel.add(jLabel4);
 
-        labelTimesInBathroom.setText("jLabel5");
+        labelTimesInBathroom.setText("<IN-BATHROOM TIMES>");
         studentStatsPanel.add(labelTimesInBathroom);
 
         statusPanel.add(studentStatsPanel);
@@ -184,17 +203,6 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        //Students of the simulation
-        Student[] studenti = new Student[]{
-            new Student("Luca",SchoolDepartment.Draughtsman, 3, 20),
-            new Student("Finke",SchoolDepartment.Visitator, 2, 20),
-            new Student("Fadil",SchoolDepartment.Cook, 4, 20),
-            new Student("Toscanelli",SchoolDepartment.Chemistry, 1, 20),
-            new Student("Lazzarus",SchoolDepartment.ComputerScience, 1, 20)
-        };
-
-        //Start the simulation
-        new Simulation(studenti,gManager,1000);
     }//GEN-LAST:event_formWindowOpened
 
     /**
@@ -232,11 +240,12 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
     
+    public static Simulation simulation;
     public static GuiManager gManager;
     public static boolean bathroomStatus = false;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private GUI.BathroomPanel bathroomPanel1;
+    public GUI.BathroomPanel bathroomPanel1;
     private javax.swing.JPanel containersPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

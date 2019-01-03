@@ -10,7 +10,7 @@ import Resources.Soap;
  * This class is used for manage the all process (Gui - Student - Bathroom).
  * @author Luca Di Bello
  */
-public class Simulation extends Thread{
+public class Simulation{
     
     /**
      * Describes the soap container.
@@ -40,13 +40,13 @@ public class Simulation extends Thread{
     /**
      * Describes the time multiplier
      */
-    private static int timeMultiplier;
+    private int timeMultiplier;
 
-    private static int timesInBathroom = 0;
+    private int totalTimesInBathroom = 0;
     
-    private static int statNoWash = 0;
+    private int totalTimesNoWash = 0;
 
-    private static int statNoDry = 0;
+    private int totalTimesNoDry = 0;
     
     /**
      * Constructor.
@@ -58,15 +58,14 @@ public class Simulation extends Thread{
         this.timeMultiplier = timeMultiplier;
         this.tManager = new TimeManager(this.timeMultiplier,students);
         this.gManager = gManager;
-        this.start();
         
-        gManager.log("[Info] Simulation started :)");
-    }
-    
-    @Override
-    public void run(){
+        //Start processes
+        gManager.setSimulation(this);
         gManager.startDateTimeUpdater(tManager,10);
         gManager.updateStats();
+        gManager.setStudentsPainting(students);
+        
+        gManager.log("[Info] Simulation started");
     }
     
     // <editor-fold defaultstate="collapsed" desc="Getters & Setters">
@@ -74,33 +73,32 @@ public class Simulation extends Thread{
      * Getter method for the constant TIME_MULTIPLIER.
      * @return The value of the constant TIME_MULTIPLIER.
      */
-    public static int getTimeMultiplier() {
+    public int getTimeMultiplier() {
         return timeMultiplier;
     }
     
-    //timesInBathroom getter + add
-    public static void increaseTimesInBathroom(){
-        timesInBathroom++;
+    public int getTotalTimesInBathroom() {
+        return totalTimesInBathroom;
     }
-    public static int getTimesInBathroom() {
-        return timesInBathroom;
+
+    public int getTotalTimesNoWash() {
+        return totalTimesNoWash;
     }
-    
-    //statNoWash getter + add
-    public static void increaseStatNoWash(){
-        statNoWash++;
-    }
-    
-    public static int getStatNoWash() {
-        return statNoWash;
+
+    public int getTotalTimesNoDry() {
+        return totalTimesNoDry;
     }
     
-    //statNoDry getter + add
-    public static void increaseStatNoDry(){
-        statNoDry++;
+    public void increaseTotalTimesInBathroom() {
+        this.totalTimesInBathroom++;
     }
-    public static int getStatNoDry() {
-        return statNoDry;
+
+    public void increaseTotalTimesNoWash() {
+        this.totalTimesNoWash++;
+    }
+
+    public void increaseTotalTimesNoDry() {
+        this.totalTimesNoDry++;
     }
     // </editor-fold>
 }

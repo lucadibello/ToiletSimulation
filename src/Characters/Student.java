@@ -4,9 +4,14 @@ import Data.ToiletHours;
 import Exceptions.PaperTowelRunOut;
 import Exceptions.SoapRunOutException;
 import Extra.TimeManager;
+import GUI.MainWindow;
 import Resources.PaperTowel;
 import Resources.Soap;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.sql.Time;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -41,6 +46,16 @@ public final class Student extends Thread{
      * Describes when the student have to go to the bathroom.
      */
     private Time[] whenBathroom;
+    
+    //Statistics attributes
+    private int timesInBathroom = 0;
+    private int timesNoWash = 0;
+    private int timesNoDry = 0;
+    
+    //Painting attributes
+    public static final int STUDENT_RADIUS = 50;
+    public Point paintPosition = new Point(-1,-1);
+
     // </editor-fold>
     
     /**
@@ -61,16 +76,22 @@ public final class Student extends Thread{
     }
     
     public void goToBathroom(){
-        //Set flag
-        isInBathroom = true;
-        
-        //Need to use soap and paper
+        if(!isInBathroom){
+            //Set flag
+            isInBathroom = true;
+
+            //Update on GUI
+            GUI.MainWindow.gManager.updatePaintStudent(this);
+        }
     }
     
     public void exitBathroom(){
         if(isInBathroom){
             //Reset flag
             isInBathroom = false; 
+
+            //Update on GUI
+            GUI.MainWindow.gManager.updatePaintStudent(this);
         }
     }
     
@@ -82,7 +103,7 @@ public final class Student extends Thread{
                     Time currentCalendarTime = TimeManager.getTimeObj();
                     GUI.MainWindow.gManager.log(this + " entered at " + currentCalendarTime);
                     //Max 10 Minutes - Min 30 Seconds
-                    int effectiveSecond = TimeManager.calculateEffectiveSecond(Simulation.Simulation.getTimeMultiplier());
+                    int effectiveSecond = TimeManager.calculateEffectiveSecond(MainWindow.simulation.getTimeMultiplier());
                     long millMax = 60 * 10 * 1000;
                     long millMin = 30 * 1000;
                     
@@ -122,7 +143,31 @@ public final class Student extends Thread{
      * @param g Graphics object
      */
     public void paint(Graphics g){
-        g.fillOval(100, 100, 200, 200);
+        g.setColor((isInBathroom ? Color.GREEN : Color.RED));
+        
+        int x = paintPosition.x * (STUDENT_RADIUS*2);
+        int y = paintPosition.y * (STUDENT_RADIUS*2);
+        //Draw student on screen
+        g.fillOval(
+                x,
+                y,
+                STUDENT_RADIUS*2,
+                STUDENT_RADIUS*2
+        );
+        
+        //WRITE NAME IN THE CENTER OF THE CIRCLE
+        int fontSize = STUDENT_RADIUS*2 / getName().length();
+        Font f = new Font("MyFont", 1, fontSize);
+        FontMetrics fm = g.getFontMetrics(f);
+        int fontWidth = fm.stringWidth(getName());
+        int fontHeight = fm.getAscent() -  fm.getDescent();
+        g.setColor(Color.WHITE);
+        g.setFont(f);
+        g.drawString(getName(), x + (((STUDENT_RADIUS*2) - fontWidth) / 2), y + (STUDENT_RADIUS*2) - (((STUDENT_RADIUS*2) - fontHeight) / 2));
+    }
+    
+    public void setPaintPosition(Point position){
+        this.paintPosition = position;
     }
     
     /**
@@ -224,6 +269,31 @@ public final class Student extends Thread{
             System.err.println("Too much times in bathroom.. I set 0");
             this.timesPerDay = 0; 
         }
+    }
+    
+    //timesInBathroom getter + add
+    public void increaseTimesInBathroom(){
+        timesInBathroom++;
+    }
+    public int getTimesInBathroom() {
+        return timesInBathroom;
+    }
+    
+    //statNoWash getter + add
+    public void increaseTimesNoWash(){
+        timesNoWash++;
+    }
+    
+    public int getTimesNoWash() {
+        return timesNoWash;
+    }
+    
+    //statNoDry getter + add
+    public void increaseTimesNoDry(){
+        timesNoDry++;
+    }
+    public int getTimesNoDry() {
+        return timesNoDry;
     }
     // </editor-fold>
 
