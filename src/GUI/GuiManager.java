@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GuiManager {
 
-    private MainWindow frame;
+    private final MainWindow frame;
     
     public GuiManager(MainWindow frame) {
         this.frame = frame;
@@ -80,7 +80,7 @@ public class GuiManager {
         //Number of rows
         List<Object[]> rows = new ArrayList<>();
         for(Student student : students){
-            System.out.println("Student: " + student.getName());
+
             int howManyTimes = student.getWhenBathroom().length;
             
             for(int i = 0; i < howManyTimes; i++){
@@ -105,7 +105,7 @@ public class GuiManager {
                         .getWidth() + 
                         rows.size() * frame.jTableStudentBathroomHours.getRowHeight()
         ));
-        
+
         for(int i = 0; i < rows.size();i++){
             model.addRow(rows.get(i));
         }

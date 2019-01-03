@@ -7,10 +7,13 @@ import Exceptions.SoapRunOutException;
  * @author Luca Di Bello
  */
 public class Soap {
+   
+    public final int FILL_STANDARD = 100;
+
     /**
     * Times that you can use the soap before it runs out. 
     */
-    private int fill_status = 100;
+    private int fill_status = FILL_STANDARD;
     
     /**
      * This method is used for get the current fill status of the soap.
@@ -23,8 +26,8 @@ public class Soap {
     /**
      * This method is used for refilling the soap container. 
      */
-    public void refill(){
-        this.fill_status = 100;
+    public synchronized void refill(){
+        this.fill_status = FILL_STANDARD;
     }
     
     /**

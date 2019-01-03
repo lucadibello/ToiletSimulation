@@ -22,7 +22,6 @@ public class BathroomPanel extends JPanel{
     
     public static void addStudents(Student a){
         students.add(a);
-        System.out.println("Added new student to panel: " + a.toString());
     }
 
     @Override
@@ -37,7 +36,6 @@ public class BathroomPanel extends JPanel{
 
             //Paint students if exists
             if(students.size() > 0){
-                System.out.println("Painting students...");
                 for(Student stud : students){
                     stud.paint(g);
                 }
@@ -54,6 +52,7 @@ public class BathroomPanel extends JPanel{
     * @param g The Graphics instance.
     * @param text The String to draw.
     * @param rect The Rectangle to center the text in.
+    * @param font Font used for the string.
     */
    public void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
        // Get the FontMetrics

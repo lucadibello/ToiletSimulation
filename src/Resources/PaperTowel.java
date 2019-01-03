@@ -7,10 +7,13 @@ import Exceptions.PaperTowelRunOut;
  * @author Luca Di Bello
  */
 public class PaperTowel {
+    
+    public final int FILL_STANDARD = 100;
+    
     /**
     * Remaining sheets of paper. 
     */
-    private int fill_status = 100;
+    private int fill_status = FILL_STANDARD;
     
     /**
      * This method is used for get how many sheets of paper are remaining.
@@ -23,8 +26,9 @@ public class PaperTowel {
     /**
      * This method is used for refilling the paper towel container. 
      */
-    public void refill(){
-        this.fill_status = 100;
+    public synchronized void refill(){
+        this.fill_status = FILL_STANDARD;
+        System.out.println(this + " refilled");
     }
     
     /**

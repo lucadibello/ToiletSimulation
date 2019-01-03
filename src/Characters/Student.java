@@ -8,7 +8,6 @@ import Resources.PaperTowel;
 import Resources.Soap;
 import java.awt.Graphics;
 import java.sql.Time;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -165,13 +164,7 @@ public final class Student extends Thread{
         }
         return false;
     }
-    
-    @Override
-    public String toString() {
-        return getName() + " - " + this.department;
-    }
-    
-    
+  
     // <editor-fold defaultstate="collapsed" desc="Getters & Setters">
     //whenBathroom Getter 
     public Time[] getWhenBathroom() {
@@ -230,8 +223,14 @@ public final class Student extends Thread{
             this.timesPerDay = timesPerDay;
         }
         else{
+            System.err.println("Too much times in bathroom.. I set 0");
             this.timesPerDay = 0; 
         }
     }
     // </editor-fold>
+    
+    @Override
+    public String toString() {
+        return getName() + " - " + this.department;
+    }
 }

@@ -3,7 +3,6 @@ package Simulation;
 import Characters.Student;
 import Extra.TimeManager;
 import GUI.GuiManager;
-import GUI.MainWindow;
 import Resources.PaperTowel;
 import Resources.Soap;
 
@@ -16,12 +15,12 @@ public class Simulation extends Thread{
     /**
      * Describes the soap container.
      */
-    public static final Soap soapContainer = new Soap();
+    public static Soap soapContainer = new Soap();
     
     /**
      * Describes the paper towel container.
      */
-    public static final PaperTowel paperContainer = new PaperTowel();
+    public static PaperTowel paperContainer = new PaperTowel();
     
     /**
      * Describes the object that manage the time.
@@ -36,20 +35,21 @@ public class Simulation extends Thread{
     /**
      * Describes the students that are in the simulation.
      */
-    private Student[] students;
+    private final Student[] students;
     
     /**
      * Describes the time multiplier
      */
-    private static int timeMultiplier = 1000;
+    private final static int TIME_MULTIPLIER = 1000;
     
     /**
      * Constructor.
      * @param students Students that will be in the simulation.
+     * @param gManager Object that manage the gui.
      */
     public Simulation(Student[] students,GuiManager gManager) {
         this.students = students;
-        this.tManager = new TimeManager(timeMultiplier,students);
+        this.tManager = new TimeManager(TIME_MULTIPLIER,students);
         this.gManager = gManager;
 
         this.start();
@@ -59,11 +59,11 @@ public class Simulation extends Thread{
     
     @Override
     public void run(){
-        //Gestisce tutto il ciclo
         gManager.startDateTimeUpdater(tManager,10);
+        
     }
     
     public static int getTimeMultiplier() {
-        return timeMultiplier;
+        return TIME_MULTIPLIER;
     }
 }

@@ -4,7 +4,6 @@ import Characters.Student;
 import Data.ToiletHours;
 import Exceptions.PaperTowelRunOut;
 import Exceptions.SoapRunOutException;
-import GUI.MainWindow;
 import java.sql.Time;
 import java.util.Calendar;
 import Simulation.Simulation;
@@ -84,13 +83,13 @@ public class TimeManager extends Thread{
                             try{
                                 student.washHands(Simulation.soapContainer);
                                 student.dryHands(Simulation.paperContainer);
-                                System.out.println("Soap: " + Simulation.soapContainer.getFillStatus());
                             }
                             catch(PaperTowelRunOut ex){
-                                Simulation.soapContainer.refill();
+                                Simulation.paperContainer.refill();
+                                System.out.println(Simulation.paperContainer.getFillStatus());
                             }
                             catch(SoapRunOutException ex){
-                                Simulation.paperContainer.refill();
+                                Simulation.soapContainer.refill();
                             }
                         }
                     }
