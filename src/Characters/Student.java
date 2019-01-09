@@ -5,6 +5,7 @@ import Exceptions.PaperTowelRunOut;
 import Exceptions.SoapRunOutException;
 import Extra.TimeManager;
 import GUI.MainWindow;
+import Interfaces.StudentListener;
 import Resources.PaperTowel;
 import Resources.Soap;
 import java.awt.Color;
@@ -12,14 +13,18 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * This class describes a SAMT student.
+ * This class describes a student.
  * @author Luca Di Bello
  */
-public final class Student extends Thread{
+public final class Student extends Thread implements MouseListener{
     
     // <editor-fold defaultstate="collapsed" desc="Attributes">
     /**
@@ -48,14 +53,48 @@ public final class Student extends Thread{
     private Time[] whenBathroom;
     
     //Statistics attributes
+    /**
+     * Describes how many times the student had been in bathroom.
+     */
     private int timesInBathroom = 0;
+    
+    /**
+     * Describes how many times the student had beem in bathroom without washing 
+     * his hands.
+     */
     private int timesNoWash = 0;
+    
+    /**
+     * Describes how many times the students had been in bathroom and washed his hands
+     * but without drying them.
+     */
     private int timesNoDry = 0;
     
+    //Range
+    /**
+     * Minumum times a student can go to the bathroom.
+     */
+    public final int MIN_TIMES_PER_DAY = 0;
+    
+    /**
+     * Maximum times a student can go to the bathroom.
+     */
+    public final int MAX_TIMES_PER_DAY = 20;
+    
     //Painting attributes
+    /**
+     * Radius of the student (used in painting)
+     */
     public static final int STUDENT_RADIUS = 50;
+    
+    /**
+     * Position of the student in the screen.
+     */
     public Point paintPosition = new Point(-1,-1);
-
+    
+    
+    //TODO: FINIRE LISTENER
+    private List<StudentListener> listeners = new ArrayList<>();
     // </editor-fold>
     
     /**
@@ -70,11 +109,13 @@ public final class Student extends Thread{
         setDepartment(department);
         setSchoolYear(schoolYear);
         setTimesPerDay(timesPerDay);
-        whenBathroom = generateBathroomTime();
-        
+        whenBathroom = generateBathroomTime();        
         this.start();
     }
     
+    /**
+     * This method sets the "isInBathroom" flag to "true" and updates the GUI.
+     */
     public void goToBathroom(){
         if(!isInBathroom){
             //Set flag
@@ -85,6 +126,9 @@ public final class Student extends Thread{
         }
     }
     
+    /**
+     * This method sets the "isInBathroom" flag to "false" and updates the GUI.
+     */
     public void exitBathroom(){
         if(isInBathroom){
             //Reset flag
@@ -111,6 +155,7 @@ public final class Student extends Thread{
                     long millSleepTime = ThreadLocalRandom.current().nextLong(millMin, millMax);
 
                     Time postCalendarTime = new Time(currentCalendarTime.getTime() + millSleepTime);
+                   
                     //Calculate right sleep time using the "effectiveSecond" attribute
                     long sleepSecond = Math.round(TimeManager.getDifferenceSeconds(currentCalendarTime, postCalendarTime) / (double)effectiveSecond); 
 
@@ -129,13 +174,32 @@ public final class Student extends Thread{
             }
         }
     }
-
+    
+    /**
+     * This method it's used for letting the student washing his hands.
+     * @param soap Container of soap.
+     * @throws SoapRunOutException Throw this exception when the soap is ran out.
+     */
     public void washHands(Soap soap) throws SoapRunOutException{
         soap.useSoap();
     }
     
+    /**
+     * This method it's used for letting the student drying his hands.
+     * @param ptw Container of paper.
+     * @throws PaperTowelRunOut Throw this exception when the paper is ran out.
+     */
     public void dryHands(PaperTowel ptw) throws PaperTowelRunOut{
         ptw.grabPaper();
+    }
+    
+    /**
+     * This method it's used every new day. It generates some others hours where 
+     * the student will go to the bathroom.
+     */
+    public void renew(){
+        setTimesPerDay(ThreadLocalRandom.current().nextInt(MIN_TIMES_PER_DAY, MAX_TIMES_PER_DAY));
+        generateWhenBathroom();
     }
     
     /**
@@ -164,10 +228,6 @@ public final class Student extends Thread{
         g.setColor(Color.WHITE);
         g.setFont(f);
         g.drawString(getName(), x + (((STUDENT_RADIUS*2) - fontWidth) / 2), y + (STUDENT_RADIUS*2) - (((STUDENT_RADIUS*2) - fontHeight) / 2));
-    }
-    
-    public void setPaintPosition(Point position){
-        this.paintPosition = position;
     }
     
     /**
@@ -207,7 +267,70 @@ public final class Student extends Thread{
         }
         return false;
     }
-  
+    
+    /**
+     * This method it's used to adding a StudentListener to the list of listeners.
+     * @param listener StudentListener to add from the list.
+     */
+    public void addStudentListener(StudentListener listener){
+        this.listeners.add(listener);
+    }
+    
+    /**
+     * This method it's used to removing a StudentListener to the list of listeners.
+     * @param listener StudentListener to remove from the list.
+     */
+    public void removeStudentListener(StudentListener listener){
+        this.listeners.remove(listener);
+    }
+    
+    /**
+     * This method it's used for checking if a point it's contained in the 
+     * area of the student during the visual simulation
+     * @param point Point to check.
+     * @return True if the point it's contained otherwise false.
+     */
+    public boolean isContained(Point point){
+        int x = paintPosition.x * (STUDENT_RADIUS*2) + STUDENT_RADIUS;
+        int y = paintPosition.y * (STUDENT_RADIUS*2) + STUDENT_RADIUS;
+        
+        Point buttonCenter = new Point(x , y );
+        
+        //Todo: Fix location error -> listener problem
+        point.setLocation(point.x,point.y-30);
+
+        return buttonCenter.distance(point) <= STUDENT_RADIUS;
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent me) {
+        if(isContained(me.getPoint())){
+            for(StudentListener listener : listeners){
+                listener.studentSelected(this);
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent me) {
+        //Not implemented
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent me) {
+        //Not implemented
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent me) {
+        //Not implemented
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
+        //Not implemented
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Getters & Setters">
     //whenBathroom Getter 
     public Time[] getWhenBathroom() {
@@ -261,8 +384,10 @@ public final class Student extends Thread{
         return timesPerDay;
     }
 
+    
+    
     public void setTimesPerDay(int timesPerDay) {
-        if(timesPerDay >= 0 && timesPerDay <= 20){
+        if(timesPerDay >= MIN_TIMES_PER_DAY && timesPerDay <= MAX_TIMES_PER_DAY){
             this.timesPerDay = timesPerDay;
         }
         else{
@@ -294,6 +419,11 @@ public final class Student extends Thread{
     }
     public int getTimesNoDry() {
         return timesNoDry;
+    }
+    
+    //Setter for painPosition parameter
+    public void setPaintPosition(Point position){
+        this.paintPosition = position;
     }
     // </editor-fold>
 

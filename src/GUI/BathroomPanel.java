@@ -14,17 +14,24 @@ import java.util.Arrays;
 import javax.swing.JPanel;
 
 /**
- * 
+ * This panel it's the container where the visual simulation it's shown.
  * @author Luca Di Bello
  */
 public class BathroomPanel extends JPanel{
     public static List<Student> students = new ArrayList<>(); 
     
-            
+    /**
+     * This methods it's used for adding a student to the visual simulation.
+     * @param a Student to add to the simulation.
+     */
     public static void addStudent(Student a){
         students.add(a);
     }
     
+    /**
+     * This methods it's used for adding a group of students to the visual simulation.
+     * @param all Students to add to the simulation.
+     */
     public static void setStudents(Student[] all){
         students.addAll(Arrays.asList(all));
     }
@@ -72,33 +79,36 @@ public class BathroomPanel extends JPanel{
         }
     }
 
+    /**
+     * This method it's used for calculating how many students can be shown in the x axis.
+     * @return Number of possible students on x axis.
+     */
     private int calculateMaxStudentsX(){
         return (int) getWidth() / (Student.STUDENT_RADIUS*2);
     }
     
+    /**
+     * This method it's used for calculating how many students can be shown in the y axis.
+     * @return Number of possible students on y axis.
+     */
     private int calculateMaxStudentsY(){
         return (int) getHeight() / (Student.STUDENT_RADIUS*2);
     }
             
     /**
-    * Draw a String centered in the middle of a Rectangle.
-    *
-    * @param g The Graphics instance.
-    * @param text The String to draw.
-    * @param rect The Rectangle to center the text in.
+    * This method draw a string centered in the middle of a determinated area
+    * 
+    * @param g Graphics object.
+    * @param text String to display.
+    * @param rect The area where the text it's centered.
     * @param font Font used for the string.
     */
    private void drawCenteredString(Graphics g, String text, Rectangle rect, Font font, Color color) {
        g.setColor(color);
-       // Get the FontMetrics
        FontMetrics metrics = g.getFontMetrics(font);
-       // Determine the X coordinate for the text
        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-       // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
-       // Set the font
        g.setFont(font);
-       // Draw the String
        g.drawString(text, x, y);
    }
 }

@@ -42,10 +42,19 @@ public class Simulation{
      */
     private int timeMultiplier;
 
+    /**
+     * Describes the total times the bathroom have been used by the students.
+     */
     private int totalTimesInBathroom = 0;
     
+    /**
+    * Describes the total times that the student's haven't washed theirs hands.
+     */
     private int totalTimesNoWash = 0;
 
+    /**
+    *  Describes the total times that the student's haven't dryied theirs hands.
+     */
     private int totalTimesNoDry = 0;
     
     /**

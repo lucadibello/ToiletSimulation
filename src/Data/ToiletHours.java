@@ -7,6 +7,13 @@ import java.sql.Time;
  * @author Luca Di Bello
  */
 public abstract class ToiletHours {
-    public static final Time TOILET_START = new Time(3, 0, 0);
+    /**
+     * Time when the toilet is being opened.
+     */
+    public static final Time TOILET_START = new Time(1, 0, 0);
+    
+    /**
+     * Time when the toilet is being closed.
+     */
     public static final Time TOILET_END = new Time(17,30,0);
 }

@@ -17,7 +17,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GuiManager {
 
+    /**
+     * Main window of the program
+     */
     private final MainWindow frame;
+    
+    /**
+     * Visual simulation of the program.
+     */
     private Simulation simulation;
     
     /**
@@ -27,12 +34,13 @@ public class GuiManager {
     public GuiManager(MainWindow frame) {
         this.frame = frame;
     }
+    
+    /**
+     * This method is used for reference the current simulation.
+     * @param sim Simulation to be referenced.
+     */
     public void setSimulation(Simulation sim){
         this.simulation = sim;
-    }
-    
-    public void addStudentPainting(Student student){
-        BathroomPanel.addStudent(student);
     }
     
     public void setStudentsPainting(Student[] students){
@@ -97,6 +105,10 @@ public class GuiManager {
         }
     }
     
+    /**
+     * This method updates the student status in the simulation.
+     * @param source Student to update.
+     */
     public void updatePaintStudent(Student source){
         Point positionGUI = source.paintPosition;
         
@@ -152,6 +164,9 @@ public class GuiManager {
         }
     }
     
+    /**
+     * This method updates the statistics in the tabcontrol.
+     */
     public void updateStats(){
         frame.labelPaperFill.setText(Integer.toString(Simulation.paperContainer.getFillStatus()));
         frame.labelSoapFill.setText(Integer.toString(Simulation.soapContainer.getFillStatus()));

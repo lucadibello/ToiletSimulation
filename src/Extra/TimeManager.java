@@ -16,18 +16,33 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class TimeManager extends Thread{
     /**
-     * How many times the time 
+     * Describes how many times the time speed have to be increased.
      */
     private int timeMultiplier;
 
+    /**
+     * Describes the object that will manage the time.
+     */
     private static Calendar calendario = Calendar.getInstance();
 
+    /**
+     * Describes the students to check. 
+     */
     private Student[] students = null;
     
+    /**
+     * Constructor with 1 parameter.
+     * @param timeMultiplier How many times the time speed have to be increased.
+     */
     public TimeManager(int timeMultiplier) {
         this(timeMultiplier, null);
     }
     
+    /**
+     * Constructor with 2 parameters.
+     * @param timeMultiplier How many times the time speed have to be increased.
+     * @param students Students to check during the execution.
+     */
     public TimeManager(int timeMultiplier, Student[] students) {
         this.timeMultiplier = timeMultiplier;
         this.students = students;
@@ -54,7 +69,9 @@ public class TimeManager extends Thread{
                 //If new day -> New bathroom time for each student
                 if(preDay != postDay){
                     for(Student student : students){
-                        student.generateWhenBathroom();
+                        //Generate new "times per day"
+                        student.renew();
+                        
                         //This method will update the table
                         GUI.MainWindow.gManager.updateStudentHours(students);
                     }
@@ -110,10 +127,11 @@ public class TimeManager extends Thread{
                                     }
                                 }
                                 catch(PaperTowelRunOut ex){
+                                    //Refill the paper
                                     Simulation.paperContainer.refill();
-                                    System.out.println(Simulation.paperContainer.getFillStatus());
                                 }
                                 catch(SoapRunOutException ex){
+                                    //Refill the soap
                                     Simulation.soapContainer.refill();
                                 }
                             }
@@ -134,24 +152,56 @@ public class TimeManager extends Thread{
         }
     }
     
+    /**
+     * This method calculate the total of milliseconds that compose a second with the
+     * passed time multiplier.
+     * @param timeMultiplier How many times the time speed have to be increased. max value is 1000.
+     * @return 
+     */
     public static int calculateEffectiveSecond(int timeMultiplier){
+        
+        if(timeMultiplier > 1000){
+            timeMultiplier = 1000;
+        }
+        
         return Math.floorDiv(1000, timeMultiplier);
     }
     
+    /**
+     * THis method calculate the difference in seconds between two times.
+     * @param first First Time object.
+     * @param second Second Time object.
+     * @return Difference in seconds between the passed Time objects.
+     */
     public static double getDifferenceSeconds(Time first,Time second){
         return (second.getTime() - first.getTime()) / 1000;
     }
     
+    /**
+     * This method is used for converting the current calendar in a Time object that
+     * describes the current day time (hour, minutes, seconds).
+     * @return Time object that contains the current day time.
+     */
     public static Time getTimeObj(){
         return new Time(calendario.get(Calendar.HOUR_OF_DAY),calendario.get(Calendar.MINUTE),calendario.get(Calendar.SECOND));
     }
-        
+    
+    /**
+     * This method convert the current calendar date to a string.
+     * @param divider Character that will divide the data.
+     * @return A string with this pattern: dd<divider>mm<divider>YYYY.
+     */
     public String getCurrentDate(String divider){
         return Integer.toString(calendario.get(Calendar.DAY_OF_MONTH)) + divider +
                 Integer.toString(calendario.get(Calendar.MONTH)+ 1) + divider + 
                 Integer.toString(calendario.get(Calendar.YEAR));
     }
     
+    /**
+     * This method convert the current calendar day time to a string.
+     * @param divider Character that will divide the data.
+     * @return A string with this patter: hh<divider>mm<divider>ss.
+     */
     public String getTime(String divider){
         return Integer.toString(calendario.get(Calendar.HOUR_OF_DAY)) + divider +
                 Integer.toString(calendario.get(Calendar.MINUTE)) + divider +

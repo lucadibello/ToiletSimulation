@@ -2,13 +2,14 @@ package GUI;
 
 import Characters.Student;
 import Data.SchoolDepartment;
+import Interfaces.StudentListener;
 import Simulation.Simulation;
 
 /**
  *
  * @author Luca Di Bello
  */
-public class MainWindow extends javax.swing.JFrame {
+public class MainWindow extends javax.swing.JFrame implements StudentListener{
 
     /**
      * Creates new form MainWindow
@@ -31,6 +32,12 @@ public class MainWindow extends javax.swing.JFrame {
             new Student("Paolo",SchoolDepartment.Chemistry, 1, 1),
             new Student("Peter",SchoolDepartment.Chemistry, 1, 15),
         };
+        
+        //Add listeners
+        for(Student student : studenti){
+            student.addStudentListener(this);
+            this.addMouseListener(student);
+        }
 
         //Start the simulation
         simulation = new Simulation(studenti,gManager,1000);
@@ -93,6 +100,8 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().add(panelInfos, java.awt.BorderLayout.PAGE_END);
 
         panelContent.setLayout(new java.awt.BorderLayout());
+
+        bathroomPanel1.setMinimumSize(new java.awt.Dimension(200, 400));
         panelContent.add(bathroomPanel1, java.awt.BorderLayout.CENTER);
 
         tabPanel.setPreferredSize(new java.awt.Dimension(350, 200));
@@ -240,8 +249,25 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
     
+    @Override
+    public void studentSelected(Student source) {
+        //Show user infos
+        new StudentInfo(source).setVisible(true);
+    }
+    
+    /**
+     * Simulation object. static because it have to be accessible from all the classes in any time. 
+     */
     public static Simulation simulation;
+    
+    /**
+     * Gui manager object, static because it have to be accessible from all the classes in any time. 
+     */
     public static GuiManager gManager;
+    
+    /**
+     * Simulation object, static because it have to be accessible from all the classes in any time. 
+     */
     public static boolean bathroomStatus = false;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
